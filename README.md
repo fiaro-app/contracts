@@ -4,6 +4,8 @@ Schemas de [Zod](https://zod.dev) compartidos entre [`api`](https://github.com/f
 
 Repo privado. Software propietario — ver [LICENSE](./LICENSE).
 
+Documento de dominio y producto (entidades, multi-tenancy, suscripciones, roadmap): [api/PRODUCT.md](https://github.com/fiaro-app/api/blob/dev/PRODUCT.md).
+
 ## Instalación
 
 Requiere autenticación contra GitHub Packages (paquete privado del scope `@fiaro-app`). En el proyecto que lo consume:
