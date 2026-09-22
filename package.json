@@ -2,6 +2,19 @@
   "name": "@fiaro-app/contracts",
   "version": "0.0.0",
   "description": "Schemas de Zod compartidos entre api, web y mobile",
+  "author": "Alejo Zuleta <valenciazuletaj@gmail.com>",
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/fiaro-app/contracts#readme",
+  "bugs": {
+    "url": "https://github.com/fiaro-app/contracts/issues"
+  },
+  "keywords": [
+    "fiaro",
+    "zod",
+    "schemas",
+    "contracts",
+    "shared"
+  ],
   "private": false,
   "type": "module",
   "main": "./dist/index.cjs",
