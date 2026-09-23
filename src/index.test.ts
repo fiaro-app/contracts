@@ -23,4 +23,8 @@ describe('@fiaro-app/contracts', () => {
       );
     expect(invalid).toEqual([]);
   });
+
+  it('registra los endpoints de cada módulo', () => {
+    expect(contracts.endpoints.system.health.path).toBe('/health');
+  });
 });
