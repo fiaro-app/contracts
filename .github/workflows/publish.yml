@@ -1,0 +1,33 @@
+name: Publish
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@fiaro-app'
+      - name: Verify tag matches package.json version
+        run: |
+          [ "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME" ] \
+            || { echo "Tag $GITHUB_REF_NAME does not match package.json version"; exit 1; }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
+      - run: pnpm run test
+      # prepublishOnly compila y valida el paquete (publint + attw) justo antes de publicar.
+      - run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

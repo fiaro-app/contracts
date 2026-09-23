@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # needed for Sonar blame/history analysis
+
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      # Genera coverage/lcov.info, que el análisis de SonarCloud usa para medir la cobertura.
+      - name: Test with coverage
+        run: pnpm run test:cov
+
+      - name: Build
+        run: pnpm run build
+
+      # publint y arethetypeswrong: validan package.json, exports y tipos tal como se publicarían.
+      - name: Check package
+        run: pnpm run check:package
+
+      - name: Generate docs
+        run: pnpm run docs
+
+      - name: Upload docs artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: docs
+          path: docs
+          retention-days: 14
+
+      # Requires the SONAR_TOKEN repo secret and Automatic Analysis disabled in Sonar
+      # (Administration -> Analysis Method -> keep only CI-based Analysis).
+      - name: SonarQube Cloud scan
+        uses: sonarsource/sonarqube-scan-action@v8
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

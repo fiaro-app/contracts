@@ -1,39 +1,70 @@
 {
   "name": "@fiaro-app/contracts",
-  "version": "0.0.0",
-  "description": "Schemas de Zod compartidos entre api, web y mobile",
-  "private": false,
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "tsup",
-    "typecheck": "tsc --noEmit"
+  "version": "0.1.0",
+  "description": "Contratos compartidos de Fiaro: schemas de Zod, tipos y endpoints para api, web y mobile",
+  "author": "Alejo Zuleta <jhoitan266@gmail.com>",
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/fiaro-app/contracts#readme",
+  "bugs": {
+    "url": "https://github.com/fiaro-app/contracts/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fiaro-app/contracts.git"
   },
+  "keywords": [
+    "fiaro",
+    "zod",
+    "schemas",
+    "contracts",
+    "shared"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run",
+    "test:cov": "vitest run --coverage",
+    "check:package": "publint --strict && attw --pack . --profile esm-only",
+    "docs": "typedoc",
+    "prepublishOnly": "pnpm run build && pnpm run check:package"
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
   "packageManager": "pnpm@11.11.0",
-  "dependencies": {
+  "engines": {
+    "node": ">=24"
+  },
+  "peerDependencies": {
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@eslint/js": "^10.0.1",
+    "@vitest/coverage-v8": "^5.0.1",
+    "eslint": "^10.11.0",
+    "publint": "^0.3.24",
+    "tsdown": "^0.23.0",
+    "typedoc": "^0.28.20",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.70.1",
+    "vitest": "^5.0.1",
+    "zod": "^4.6.5"
   }
 }
