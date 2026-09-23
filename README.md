@@ -334,6 +334,7 @@ Luego, en cada repo que lo consume: `pnpm add @fiaro-app/contracts@0.2.0`.
 | `pnpm typecheck` | `tsc --noEmit`, incluidas las pruebas de tipos |
 | `pnpm lint` | ESLint |
 | `pnpm test` | Pruebas con Vitest |
+| `pnpm test:cov` | Pruebas con reporte de cobertura; falla por debajo del 80 %, el mismo mínimo que exige SonarCloud |
 | `pnpm check:package` | `publint` + `attw` sobre el paquete tal como se publicaría |
 | `pnpm docs` | Documentación con TypeDoc → `docs/` |
 

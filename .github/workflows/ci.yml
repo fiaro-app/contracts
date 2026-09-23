@@ -29,8 +29,9 @@ jobs:
       - name: Typecheck
         run: pnpm run typecheck
 
-      - name: Test
-        run: pnpm run test
+      # Genera coverage/lcov.info, que el análisis de SonarCloud usa para medir la cobertura.
+      - name: Test with coverage
+        run: pnpm run test:cov
 
       - name: Build
         run: pnpm run build
