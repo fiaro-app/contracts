@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { messageKey } from '../i18n/message-key';
 
 /**
  * Identificador de cualquier entidad (UUID).
@@ -7,5 +8,5 @@ import { z } from 'zod';
  * La app móvil genera en el dispositivo el `id` de cada visita para poder registrarla sin
  * conexión; ese mismo `id` es la llave de idempotencia al sincronizar.
  */
-export const IdSchema = z.uuid({ error: 'Identificador inválido.' });
+export const IdSchema = z.uuid({ error: messageKey('contracts.id.invalid') });
 export type Id = z.infer<typeof IdSchema>;

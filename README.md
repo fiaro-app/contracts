@@ -40,6 +40,7 @@ Lo que **no** hace: no reemplaza la llamada HTTP, no contiene lógica de negocio
 | Módulo | Qué exporta |
 |---|---|
 | `common` | Tipos base: IDs, dinero, teléfono, cédula, fechas, textos, paginación y errores |
+| `i18n` | Los mensajes de validación del contrato por idioma: `CONTRACT_MESSAGES` y `contractMessage` |
 | `http` | `defineEndpoint`, `buildPath` y los tipos derivados de cada endpoint |
 | `system` | `GET /health` y `GET /mobile/version` (version-gate de la app) |
 | `auth` | `User` |
@@ -81,11 +82,11 @@ pnpm add @fiaro-app/contracts zod
 ### Validar lo que escribe el usuario
 
 ```typescript
-import { MobilePhoneSchema, toColombianE164 } from '@fiaro-app/contracts';
+import { MobilePhoneSchema, contractMessage, toColombianE164 } from '@fiaro-app/contracts';
 
 const phone = toColombianE164('300 123 4567'); // '+573001234567', o null si no es válido
 const result = MobilePhoneSchema.safeParse(phone);
-if (!result.success) showError(result.error.issues[0]?.message);
+if (!result.success) showError(contractMessage('es', result.error.issues[0]?.message ?? ''));
 ```
 
 ### Usar los tipos
@@ -110,9 +111,17 @@ const response = await fetch(`${API_URL}${buildPath(endpoint.path, {})}`, {
 const version: EndpointResponse<typeof endpoint> = endpoint.response.parse(await response.json());
 ```
 
-### Mensajes de validación en español
+### Mensajes de validación por idioma
 
-Los mensajes propios del dominio (teléfono, cédula, montos) ya están en español. Para los genéricos de Zod ("demasiado corto", etc.), cada app activa el idioma una vez al arrancar:
+Los schemas que escriben su propio mensaje (teléfono, cédula, montos, fechas, ID, versión de la app) no llevan el texto sino una **clave** (`contracts.phone.invalid_mobile`): `issue.message` trae la clave y `contractMessage(idioma, mensaje)` la convierte en el texto de ese idioma. Lo que no es una clave del contrato (el mensaje de otro schema, o un texto que la propia app escribió) sale tal cual, así que se puede pasar cualquier `issue.message`. Hoy solo hay español (`CONTRACT_MESSAGES.es`): una región (`es-CO`) usa el idioma base, y un idioma que no existe usa el español.
+
+```typescript
+import { contractMessage } from '@fiaro-app/contracts';
+
+const text = contractMessage('es', issue.message); // el idioma de la app
+```
+
+Para los mensajes genéricos de Zod ("demasiado corto", etc.), cada app activa el idioma una vez al arrancar:
 
 ```typescript
 import { z } from 'zod';
@@ -120,7 +129,7 @@ import { z } from 'zod';
 z.config(z.locales.es());
 ```
 
-La librería no lo hace por su cuenta a propósito (ver [decisión 5](#5-importar-el-paquete-no-tiene-efectos)).
+La librería no lo hace por su cuenta a propósito (ver [decisión 5](#5-importar-el-paquete-no-tiene-efectos)). La API resuelve ambos por petición: sus catálogos incluyen `CONTRACT_MESSAGES` y cada error sale en el idioma de `Accept-Language`.
 
 ## Estructura
 
@@ -130,6 +139,7 @@ src/
 ├── endpoints.ts      # Registro de todos los endpoints, agrupados por módulo
 ├── common/           # Tipos base reutilizados por todos los módulos
 ├── http/             # defineEndpoint, buildPath y tipos derivados
+├── i18n/             # Mensajes de validación por idioma (es.ts) y contractMessage
 ├── system/           # Endpoints de infraestructura
 └── <módulo>/         # Uno por módulo de la API
     ├── index.ts
@@ -277,6 +287,18 @@ src/
 
 **Por qué:** la base de datos puede cambiar (índices, columnas técnicas, `lender_id` en todas las tablas) sin romper el contrato con las apps. Los datos calculados, como el saldo o los días de mora, se agregan en los schemas de respuesta de cada endpoint.
 
+#### 21. Los schemas llevan claves de mensaje y los textos van por idioma
+
+**Qué:** un schema que escribe su propio mensaje usa una clave (`contracts.money.not_positive`, declarada con `messageKey`), no un texto. Los textos viven en `src/i18n/<idioma>.ts` (hoy `es`), el paquete los exporta como `CONTRACT_MESSAGES` y `contractMessage(idioma, mensaje)` los busca.
+
+**Por qué:**
+- **El mismo schema sirve en cualquier idioma.** Con el texto dentro del schema, un idioma nuevo obligaba a duplicar cada schema. Con claves, se agrega un archivo de textos y ningún schema cambia.
+- **Los textos se escriben una vez.** `api`, `mobile` y `web` muestran los mismos mensajes del contrato: cada uno los toma de aquí en lugar de copiarlos y dejar que se desincronicen.
+- **Sin estado global (decisión 5).** Que el paquete elija el idioma (un `setLanguage`) obligaría a configurar algo global; con claves, cada app decide el idioma al mostrar el mensaje y la API puede responder uno distinto en cada petición.
+- **Se comprueba al compilar.** `messageKey` solo acepta claves que existen y un idioma al que le falta una clave no compila. Una prueba comprueba que cada clave la use un schema y que no quede un texto sin clave.
+
+**A tener en cuenta:** `issue.message` de estos schemas ya no es un texto legible: hay que pasarlo por `contractMessage` antes de mostrarlo (la API lo hace al responder). Si un idioma no tiene una clave, se usa el texto en español.
+
 ---
 
 ## Cómo agregar al contrato
@@ -290,6 +312,10 @@ src/
 5. Anota el cambio en `CHANGELOG.md`, en "Sin publicar".
 
 **Un código de error del dominio:** agrégalo a `ErrorCodeSchema` con un comentario que indique su status HTTP.
+
+**Un mensaje de validación propio:** agrega la clave y su texto en `src/i18n/es.ts` (y en cada idioma que exista) y en el schema usa `{ error: messageKey('contracts.<grupo>.<nombre>') }`. No escribas el texto dentro del schema.
+
+**Un idioma nuevo:** crea `src/i18n/<idioma>.ts` con la misma forma que `es.ts` y agrégalo a `CONTRACT_MESSAGES`; si le falta una clave, no compila. Cada app y la API tienen que agregarlo también en su lado.
 
 ## Versionado
 

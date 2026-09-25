@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { messageKey } from '../i18n/message-key';
 
 /** Indicativo internacional de Colombia. */
 export const COLOMBIA_DIAL_CODE = '+57';
@@ -15,7 +16,7 @@ const PHONE_REGEX = /^\+57(?:3\d{9}|60[1-8]\d{7})$/;
  */
 export const PhoneSchema = z
   .string()
-  .regex(PHONE_REGEX, { error: 'Ingresa un número colombiano válido de 10 dígitos.' });
+  .regex(PHONE_REGEX, { error: messageKey('contracts.phone.invalid') });
 export type Phone = z.infer<typeof PhoneSchema>;
 
 /**
@@ -24,7 +25,7 @@ export type Phone = z.infer<typeof PhoneSchema>;
  */
 export const MobilePhoneSchema = z
   .string()
-  .regex(MOBILE_PHONE_REGEX, { error: 'Ingresa un celular colombiano válido de 10 dígitos.' });
+  .regex(MOBILE_PHONE_REGEX, { error: messageKey('contracts.phone.invalid_mobile') });
 export type MobilePhone = z.infer<typeof MobilePhoneSchema>;
 
 /**
