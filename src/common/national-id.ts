@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { messageKey } from '../i18n/message-key';
 
 /** Solo dígitos, sin cero inicial, de 3 a 10 dígitos (las cédulas antiguas son más cortas). */
 const NATIONAL_ID_REGEX = /^[1-9]\d{2,9}$/;
@@ -9,7 +10,7 @@ const NATIONAL_ID_REGEX = /^[1-9]\d{2,9}$/;
  */
 export const NationalIdSchema = z
   .string()
-  .regex(NATIONAL_ID_REGEX, { error: 'Ingresa una cédula válida: solo números, sin puntos.' });
+  .regex(NATIONAL_ID_REGEX, { error: messageKey('contracts.national_id.invalid') });
 export type NationalId = z.infer<typeof NationalIdSchema>;
 
 /**

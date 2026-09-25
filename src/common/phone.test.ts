@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { contractMessage } from '../i18n';
 import { MobilePhoneSchema, PhoneSchema, toColombianE164 } from './phone';
 
 describe('PhoneSchema', () => {
@@ -26,9 +27,11 @@ describe('MobilePhoneSchema', () => {
     expect(MobilePhoneSchema.safeParse('+576012345678').success).toBe(false);
   });
 
-  it('explica el error en español', () => {
+  it('explica el error con una clave de mensaje, que se traduce con contractMessage', () => {
     const result = MobilePhoneSchema.safeParse('300');
-    expect(result.error?.issues[0]?.message).toBe('Ingresa un celular colombiano válido de 10 dígitos.');
+    const message = result.error?.issues[0]?.message ?? '';
+    expect(message).toBe('contracts.phone.invalid_mobile');
+    expect(contractMessage('es', message)).toBe('Ingresa un celular colombiano válido de 10 dígitos.');
   });
 });
 

@@ -2,5 +2,6 @@
   "entryPoints": ["src/index.ts"],
   "out": "docs",
   "highlightLanguages": ["bash", "ini", "json", "typescript"],
+  "intentionallyNotExported": ["Leaves"],
   "treatWarningsAsErrors": true
 }
