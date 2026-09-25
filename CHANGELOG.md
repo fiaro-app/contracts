@@ -4,6 +4,11 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 
 ## [Sin publicar]
 
+## [0.3.0] - 2026-09-25
+
+### Agregado
+- Códigos de error de autenticación en `ErrorCodeSchema`: `SIGN_IN_LOCKED` (429: demasiados intentos fallidos de inicio de sesión con ese celular; se puede reintentar pasado el tiempo de `Retry-After`) y `PASSWORD_TOO_WEAK` (400: la contraseña es demasiado fácil de adivinar, porque está entre las más usadas o se deduce del celular o de la cédula).
+
 ## [0.2.0] - 2026-09-25
 
 ### Agregado
