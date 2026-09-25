@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { messageKey } from '../i18n/message-key';
 
 /** Zona horaria del negocio. Todas las fechas de calendario se interpretan en hora de Colombia. */
 export const BUSINESS_TIME_ZONE = 'America/Bogota';
@@ -10,14 +11,14 @@ const BUSINESS_UTC_OFFSET_MS = -5 * 60 * 60 * 1000;
  * Fecha de calendario del negocio, sin hora: `AAAA-MM-DD` (inicio del préstamo, fecha de
  * compromiso, día del cuadre). Nunca se convierte a otra zona horaria.
  */
-export const BusinessDateSchema = z.iso.date({ error: 'Fecha inválida: usa el formato AAAA-MM-DD.' });
+export const BusinessDateSchema = z.iso.date({ error: messageKey('contracts.date.invalid') });
 export type BusinessDate = z.infer<typeof BusinessDateSchema>;
 
 /**
  * Instante exacto en ISO 8601 con zona horaria (`2026-09-23T10:15:00-05:00` o
  * `2026-09-23T15:15:00Z`). Se usa para `createdAt`, `occurredAt` y demás marcas de tiempo.
  */
-export const TimestampSchema = z.iso.datetime({ offset: true, error: 'Fecha y hora inválidas.' });
+export const TimestampSchema = z.iso.datetime({ offset: true, error: messageKey('contracts.timestamp.invalid') });
 export type Timestamp = z.infer<typeof TimestampSchema>;
 
 /** Día de la semana, para configurar los días sin cobro de cada prestamista. */
@@ -39,7 +40,7 @@ export const DateRangeSchema = z
     to: BusinessDateSchema,
   })
   .refine((range) => range.from <= range.to, {
-    error: 'La fecha final debe ser igual o posterior a la inicial.',
+    error: messageKey('contracts.date_range.end_before_start'),
     path: ['to'],
   });
 export type DateRange = z.infer<typeof DateRangeSchema>;

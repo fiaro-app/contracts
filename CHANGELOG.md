@@ -4,6 +4,15 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 
 ## [Sin publicar]
 
+## [0.2.0] - 2026-09-25
+
+### Agregado
+- Mensajes de validación por idioma: `CONTRACT_MESSAGES` (hoy `es`), `contractMessage(idioma, mensaje)`, `DEFAULT_CONTRACT_LANGUAGE` y los tipos `ContractLanguage` y `ContractMessageKey`. Un idioma nuevo es un archivo de textos en `src/i18n/`; si le falta una clave, no compila.
+- Códigos de error de dominio de autenticación en `ErrorCodeSchema`: `INVALID_PHONE` (400), `INVALID_PASSWORD_LENGTH` (400) y `PHONE_ALREADY_REGISTERED` (409).
+
+### Cambiado
+- **Los mensajes propios de los schemas ahora son claves, no texto.** `MobilePhoneSchema`, `PhoneSchema`, `NationalIdSchema`, `IdSchema`, `CopAmountSchema`, `PositiveCopAmountSchema`, `BusinessDateSchema`, `TimestampSchema`, `DateRangeSchema` y `AppVersionSchema` rechazan con `contracts.<grupo>.<nombre>` (por ejemplo, `contracts.phone.invalid_mobile`) en lugar del texto en español. Quien muestre `issue.message` debe pasarlo por `contractMessage(idioma, message)`; la API lo traduce al responder según `Accept-Language`.
+
 ## [0.1.0] - 2026-09-23
 
 ### Agregado

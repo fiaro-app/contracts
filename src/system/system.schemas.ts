@@ -1,9 +1,10 @@
 import { z } from 'zod';
+import { messageKey } from '../i18n/message-key';
 
 /** Versión de la app móvil: `MAYOR.MENOR.PARCHE` (`1.4.0`). */
 export const AppVersionSchema = z
   .string()
-  .regex(/^\d+\.\d+\.\d+$/, { error: 'Versión inválida: usa el formato MAYOR.MENOR.PARCHE.' });
+  .regex(/^\d+\.\d+\.\d+$/, { error: messageKey('contracts.app_version.invalid') });
 export type AppVersion = z.infer<typeof AppVersionSchema>;
 
 /** Respuesta de `GET /health` cuando el servicio está disponible. */

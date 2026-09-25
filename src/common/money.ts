@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { messageKey } from '../i18n/message-key';
 
 /** Valor máximo de una columna `INTEGER` de Postgres (unos 2.147 millones de pesos). */
 export const MAX_COP_AMOUNT = 2_147_483_647;
@@ -8,14 +9,14 @@ export const MAX_COP_AMOUNT = 2_147_483_647;
  * Entero y sin centavos: el negocio no maneja fracciones de peso.
  */
 export const CopAmountSchema = z
-  .int({ error: 'El valor debe ser un número entero de pesos.' })
-  .nonnegative({ error: 'El valor no puede ser negativo.' })
-  .max(MAX_COP_AMOUNT, { error: 'El valor es demasiado alto.' });
+  .int({ error: messageKey('contracts.money.not_integer') })
+  .nonnegative({ error: messageKey('contracts.money.negative') })
+  .max(MAX_COP_AMOUNT, { error: messageKey('contracts.money.too_high') });
 export type CopAmount = z.infer<typeof CopAmountSchema>;
 
 /** Monto de un solo registro que debe ser mayor que cero (valor prestado, cuota, pago). */
 export const PositiveCopAmountSchema = CopAmountSchema.positive({
-  error: 'Ingresa un valor mayor a $0.',
+  error: messageKey('contracts.money.not_positive'),
 });
 
 /**

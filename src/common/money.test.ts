@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { contractMessage } from '../i18n';
 import { CopAmountSchema, CopTotalSchema, MAX_COP_AMOUNT, PositiveCopAmountSchema } from './money';
 
 describe('CopAmountSchema', () => {
@@ -20,7 +21,9 @@ describe('PositiveCopAmountSchema', () => {
   it('exige un valor mayor a cero con el mensaje del formulario', () => {
     const result = PositiveCopAmountSchema.safeParse(0);
     expect(result.success).toBe(false);
-    expect(result.error?.issues[0]?.message).toBe('Ingresa un valor mayor a $0.');
+    const message = result.error?.issues[0]?.message ?? '';
+    expect(message).toBe('contracts.money.not_positive');
+    expect(contractMessage('es', message)).toBe('Ingresa un valor mayor a $0.');
   });
 });
 
