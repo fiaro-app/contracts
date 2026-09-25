@@ -386,7 +386,9 @@ git checkout -- package.json pnpm-workspace.yaml pnpm-lock.yaml && pnpm install
 
 - `dev` es la rama de integración y la rama por defecto: todo PR apunta aquí.
 - `main` es producción y la base de los tags de publicación; se actualiza vía PR desde `dev`.
-- Merge siempre por squash; la rama de origen se borra automáticamente al mergear.
+- **PR de funcionalidad** (rama → `dev`): merge por **squash**, un commit por PR.
+- **PR de release** (`dev` → `main`): **merge commit**. Así `main` y `dev` comparten historia y el siguiente release no tiene conflictos; con squash, `main` quedaría con un commit que `dev` no tiene.
+- La rama de origen se borra automáticamente al mergear (`dev` nunca, porque es la rama por defecto).
 
 ## Repos relacionados
 
