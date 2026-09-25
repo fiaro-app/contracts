@@ -15,6 +15,12 @@ describe('ErrorCodeSchema', () => {
       expect.arrayContaining(['INVALID_PHONE', 'INVALID_PASSWORD_LENGTH', 'PHONE_ALREADY_REGISTERED']),
     );
   });
+
+  it('incluye el bloqueo del inicio de sesión por celular y la contraseña demasiado débil', () => {
+    expect(ErrorCodeSchema.options).toEqual(expect.arrayContaining(['SIGN_IN_LOCKED', 'PASSWORD_TOO_WEAK']));
+    expect(ErrorCodeSchema.enum.SIGN_IN_LOCKED).toBe('SIGN_IN_LOCKED');
+    expect(ErrorCodeSchema.enum.PASSWORD_TOO_WEAK).toBe('PASSWORD_TOO_WEAK');
+  });
 });
 
 describe('ApiErrorSchema', () => {

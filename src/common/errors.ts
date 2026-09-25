@@ -34,6 +34,10 @@ export const ErrorCodeSchema = z.enum([
   'INVALID_PASSWORD_LENGTH',
   /** 409: ya existe una cuenta con ese celular (es único en todo el sistema). */
   'PHONE_ALREADY_REGISTERED',
+  /** 429: demasiados intentos fallidos de inicio de sesión con ese celular; se puede reintentar pasado el tiempo de `Retry-After`. */
+  'SIGN_IN_LOCKED',
+  /** 400: la contraseña es demasiado fácil de adivinar: está entre las más usadas o se deduce del celular o de la cédula. */
+  'PASSWORD_TOO_WEAK',
 ]);
 export type ErrorCode = z.infer<typeof ErrorCodeSchema>;
 
