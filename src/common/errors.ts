@@ -38,6 +38,20 @@ export const ErrorCodeSchema = z.enum([
   'SIGN_IN_LOCKED',
   /** 400: la contraseña es demasiado fácil de adivinar: está entre las más usadas o se deduce del celular o de la cédula. */
   'PASSWORD_TOO_WEAK',
+  /** 400: el código para recuperar la contraseña no es correcto o ya se usó. */
+  'PASSWORD_RESET_CODE_INVALID',
+  /** 400: el código para recuperar la contraseña venció. */
+  'PASSWORD_RESET_CODE_EXPIRED',
+  /** 409: la cuenta no tiene un correo de contacto registrado. */
+  'CONTACT_EMAIL_NOT_SET',
+  /** 409: el correo de contacto ya está verificado. */
+  'CONTACT_EMAIL_ALREADY_VERIFIED',
+  /** 400: el código para verificar el correo de contacto no es correcto o ya se usó. */
+  'CONTACT_EMAIL_VERIFICATION_CODE_INVALID',
+  /** 400: el código para verificar el correo de contacto venció. */
+  'CONTACT_EMAIL_VERIFICATION_CODE_EXPIRED',
+  /** 403: la cuenta está desactivada. */
+  'ACCOUNT_DEACTIVATED',
 ]);
 export type ErrorCode = z.infer<typeof ErrorCodeSchema>;
 

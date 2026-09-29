@@ -21,6 +21,20 @@ describe('ErrorCodeSchema', () => {
     expect(ErrorCodeSchema.enum.SIGN_IN_LOCKED).toBe('SIGN_IN_LOCKED');
     expect(ErrorCodeSchema.enum.PASSWORD_TOO_WEAK).toBe('PASSWORD_TOO_WEAK');
   });
+
+  it('incluye la recuperación de contraseña, el correo de contacto y la desactivación de cuenta', () => {
+    expect(ErrorCodeSchema.options).toEqual(
+      expect.arrayContaining([
+        'PASSWORD_RESET_CODE_INVALID',
+        'PASSWORD_RESET_CODE_EXPIRED',
+        'CONTACT_EMAIL_NOT_SET',
+        'CONTACT_EMAIL_ALREADY_VERIFIED',
+        'CONTACT_EMAIL_VERIFICATION_CODE_INVALID',
+        'CONTACT_EMAIL_VERIFICATION_CODE_EXPIRED',
+        'ACCOUNT_DEACTIVATED',
+      ]),
+    );
+  });
 });
 
 describe('ApiErrorSchema', () => {

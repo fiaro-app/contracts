@@ -4,6 +4,11 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 
 ## [Sin publicar]
 
+## [0.4.0] - 2026-09-28
+
+### Agregado
+- Códigos de error de gestión de usuario en `ErrorCodeSchema`: `PASSWORD_RESET_CODE_INVALID` (400), `PASSWORD_RESET_CODE_EXPIRED` (400), `CONTACT_EMAIL_NOT_SET` (409), `CONTACT_EMAIL_ALREADY_VERIFIED` (409), `CONTACT_EMAIL_VERIFICATION_CODE_INVALID` (400), `CONTACT_EMAIL_VERIFICATION_CODE_EXPIRED` (400) y `ACCOUNT_DEACTIVATED` (403).
+
 ## [0.3.0] - 2026-09-25
 
 ### Agregado
