@@ -4,6 +4,8 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 
 ## [Sin publicar]
 
+## [0.6.0] - 2026-09-30
+
 ### Agregado
 - Código de error de préstamos en `ErrorCodeSchema`: `LOAN_NOT_CANCELABLE` (422: el préstamo ya no está `ACTIVE`, así que no se puede cancelar).
 
