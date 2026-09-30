@@ -4,6 +4,8 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 
 ## [Sin publicar]
 
+## [0.5.0] - 2026-09-30
+
 ### Agregado
 - Código de error de clientes en `ErrorCodeSchema`: `CLIENT_NATIONAL_ID_TAKEN` (409: ya existe un cliente con esa cédula para este prestamista).
 
