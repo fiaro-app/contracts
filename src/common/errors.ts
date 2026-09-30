@@ -52,6 +52,8 @@ export const ErrorCodeSchema = z.enum([
   'CONTACT_EMAIL_VERIFICATION_CODE_EXPIRED',
   /** 403: la cuenta está desactivada. */
   'ACCOUNT_DEACTIVATED',
+  /** 409: ya existe un cliente con esa cédula para este prestamista. */
+  'CLIENT_NATIONAL_ID_TAKEN',
 ]);
 export type ErrorCode = z.infer<typeof ErrorCodeSchema>;
 
