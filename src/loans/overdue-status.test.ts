@@ -19,7 +19,7 @@ describe('overdueStatus', () => {
   });
 
   it('el schema acepta solo los cuatro estados', () => {
-    expect(OverdueStatusSchema.options).toEqual(['paid', 'current', 'late', 'DELINQUENT']);
+    expect(OverdueStatusSchema.options).toEqual(['PAID', 'CURRENT', 'LATE', 'DELINQUENT']);
     expect(OverdueStatusSchema.safeParse('OVERDUE').success).toBe(false);
   });
 });
