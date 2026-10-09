@@ -4,7 +4,7 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 
 ## [Sin publicar]
 
-## [0.6.0] - 2026-09-30
+## [0.7.0] - 2026-10-09
 
 ### Agregado
 - Schemas de los endpoints D-103 a D-115 de la API, para que `web` y `mobile` dejen de declararlos por su cuenta:
@@ -20,6 +20,8 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 
 ### Cambiado
 - `LenderSchema` suma `brandColor` (`#RRGGBB` o `null`, el color de Fiaro). Quien construya un `Lender` a mano debe incluirlo.
+
+## [0.6.0] - 2026-09-30
 
 ### Agregado
 - Estado de mora de un préstamo, compartido por la web y la app móvil: `overdueStatus({ balance, overdueDays })` devuelve `PAID`, `CURRENT`, `LATE` (ATRASO, 1 a 7 días) o `DELINQUENT` (MORA, más de 7 días). Incluye `LATE_MAX_DAYS` (7) y `OverdueStatusSchema`. La frontera la confirmó producto el 2026-10-09 y coincide con el primer rango del dashboard (D-100).
