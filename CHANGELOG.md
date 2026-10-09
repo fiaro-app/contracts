@@ -4,6 +4,8 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 
 ## [Sin publicar]
 
+## [0.6.0] - 2026-09-30
+
 ### Agregado
 - Schemas de los endpoints D-103 a D-115 de la API, para que `web` y `mobile` dejen de declararlos por su cuenta:
   - `loans`: calendario de cuotas (`InstallmentStatusSchema`, `LoanInstallmentSchema`, `LoanInstallmentsSchema`) y fila de la lista con saldo y mora (`LoanListItemSchema`).
