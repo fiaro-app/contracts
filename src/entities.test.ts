@@ -1,20 +1,33 @@
 import { describe, expect, it } from 'vitest';
 import type { z } from 'zod';
 import {
+  AccountSessionSchema,
+  ArrearsBucketSchema,
+  ClientListItemSchema,
   ClientSchema,
   CollectionAssignmentSchema,
+  CollectionVisitReportSchema,
   CollectionVisitSchema,
+  CollectorPeriodStatsSchema,
+  CreateLeadRequestSchema,
   DailySettlementSchema,
+  LenderDashboardSchema,
+  LenderPeriodStatsSchema,
   LenderSchema,
+  LoanInstallmentsSchema,
+  LoanListItemSchema,
   LoanSchema,
+  MarkAllReadResultSchema,
   MembershipSchema,
   NonWorkingDaySchema,
   NotificationSchema,
   PaymentReversalSchema,
   PaymentSchema,
   PortfolioSchema,
+  SubscriptionDetailsSchema,
   SubscriptionSchema,
   TenantSchema,
+  UnreadCountSchema,
   UserSchema,
 } from './index';
 
@@ -58,6 +71,7 @@ const fixtures: Array<[string, z.ZodType, Record<string, unknown>]> = [
       tenantId: id(2),
       name: 'Financiera Buen Vecino',
       logoUrl: null,
+      brandColor: null,
       nonWorkingWeekdays: ['SUNDAY'],
       skipNationalHolidays: true,
       createdAt: at,
@@ -190,6 +204,163 @@ const fixtures: Array<[string, z.ZodType, Record<string, unknown>]> = [
       createdAt: at,
     },
   ],
+  [
+    'LoanInstallments',
+    LoanInstallmentsSchema,
+    {
+      loanId: id(9),
+      asOf: '2026-09-25',
+      installments: [
+        { number: 1, dueDate: '2026-09-22', expectedAmount: 30_000, paidAmount: 30_000, status: 'PAID' },
+        { number: 2, dueDate: '2026-09-23', expectedAmount: 30_000, paidAmount: 10_000, status: 'PARTIAL' },
+        { number: 3, dueDate: '2026-09-24', expectedAmount: 30_000, paidAmount: 0, status: 'OVERDUE' },
+        { number: 4, dueDate: '2026-09-26', expectedAmount: 30_000, paidAmount: 0, status: 'PENDING' },
+      ],
+    },
+  ],
+  [
+    'LoanListItem',
+    LoanListItemSchema,
+    {
+      id: id(9),
+      clientId: id(8),
+      principalAmount: 500_000,
+      installmentCount: 20,
+      installmentValue: 30_000,
+      totalPayable: 600_000,
+      frequency: 'DAILY',
+      startDate: '2026-09-22',
+      status: 'ACTIVE',
+      createdByMembershipId: id(6),
+      createdAt: at,
+      closedAt: null,
+      balance: 380_000,
+      overdueAmount: 60_000,
+      overdueDays: 2,
+      nextDueDate: '2026-09-26',
+      collector: { membershipId: id(6), fullName: 'Alejo Zuleta' },
+    },
+  ],
+  [
+    'ClientListItem',
+    ClientListItemSchema,
+    {
+      id: id(8),
+      nationalId: '1020304050',
+      fullName: 'María Gómez',
+      occupation: 'Vendedora ambulante',
+      phone: '+573001234567',
+      address: 'Calle 45 #12-30, Barrio Bolívar',
+      createdAt: at,
+      balance: 380_000,
+      overdueAmount: 60_000,
+      overdueDays: 2,
+      activeLoans: 1,
+    },
+  ],
+  [
+    'CollectionVisitReport',
+    CollectionVisitReportSchema,
+    {
+      data: [
+        {
+          visitId: id(11),
+          occurredAt: '2026-09-23T10:15:00-05:00',
+          outcome: 'PAID',
+          expectedAmount: 30_000,
+          promisedDate: null,
+          loan: { id: id(9) },
+          client: { id: id(8), fullName: 'María Gómez' },
+          collector: { membershipId: id(6), fullName: 'Alejo Zuleta' },
+          payment: { id: id(12), amount: 30_000, method: 'CASH', reversed: false },
+        },
+      ],
+      meta: { page: 1, pageSize: 20, total: 1 },
+      range: { from: '2026-09-23', to: '2026-09-23' },
+    },
+  ],
+  [
+    'CollectorPeriodStats',
+    CollectorPeriodStatsSchema,
+    { from: '2026-09-01', to: '2026-09-23', expectedAmount: 1_000_000, collectedAmount: 900_000, effectiveness: 0.9, visitsCount: 40, overdueAmount: 0 },
+  ],
+  [
+    'LenderDashboard',
+    LenderDashboardSchema,
+    {
+      totalPortfolio: 18_400_000,
+      collectedToday: 3_200_000,
+      activeCollectors: 7,
+      totalCollectors: 9,
+      effectivenessToday: 0.84,
+      clientsInArrears: 23,
+      alerts: ['3 cobradores aún no han iniciado su ruta hoy.'],
+      pendingSettlements: [],
+      period: { from: '2026-09-01', to: '2026-09-23' },
+      collectedInPeriod: 9_000_000,
+      expectedInPeriod: 10_000_000,
+      effectivenessInPeriod: 0.9,
+    },
+  ],
+  [
+    'LenderPeriodStats',
+    LenderPeriodStatsSchema,
+    {
+      from: '2026-09-01',
+      to: '2026-09-23',
+      totalPortfolio: 18_400_000,
+      portfolioAtRisk: 7_050_000,
+      arrearsRate: 0.18,
+      arrearsByAge: ['0-7', '8-15', '16-30', '30+'].map((label) => ({ label, amount: 0, clientsCount: 0 })),
+      topArrears: [{ clientId: id(8), clientFullName: 'María Gómez', overdueDays: 32, overdueAmount: 900_000 }],
+      collectorPerformance: [{ collectorMembershipId: id(6), fullName: 'Alejo Zuleta', effectiveness: 0.92, overdueAmount: 300_000 }],
+      expectedAmount: 5_000_000,
+      collectedAmount: 4_000_000,
+      effectiveness: 0.8,
+      previous: {
+        from: '2026-08-09',
+        to: '2026-08-31',
+        totalPortfolio: 17_000_000,
+        portfolioAtRisk: 5_000_000,
+        arrearsRate: 0.29,
+        expectedAmount: 4_500_000,
+        collectedAmount: 3_000_000,
+        effectiveness: 0.67,
+      },
+    },
+  ],
+  [
+    'AccountSession',
+    AccountSessionSchema,
+    {
+      id: id(16),
+      isCurrent: true,
+      device: { client: 'Chrome', os: 'Windows', label: 'Chrome en Windows' },
+      ipAddress: null,
+      createdAt: at,
+      lastUsedAt: at,
+      expiresAt: '2026-10-23T15:00:00Z',
+    },
+  ],
+  ['CreateLeadRequest', CreateLeadRequestSchema, { name: 'Ana Pérez', email: 'ana@ejemplo.co', message: 'Quiero probar Fiaro.' }],
+  [
+    'SubscriptionDetails',
+    SubscriptionDetailsSchema,
+    {
+      planCode: 'TRIAL',
+      status: 'ACTIVE',
+      currentPeriodEndsAt: '2026-10-23T05:00:00Z',
+      graceEndsAt: '2026-10-30T05:00:00Z',
+      daysRemaining: 30,
+      graceDaysRemaining: 0,
+      isReadOnly: false,
+      limits: { maxActiveLenders: 1, maxCollectors: 5 },
+      usage: { activeLenders: 1, activeCollectors: 2 },
+      createdAt: at,
+    },
+  ],
+  ['UnreadCount', UnreadCountSchema, { count: 4 }],
+  ['MarkAllReadResult', MarkAllReadResultSchema, { marked: 3 }],
 ];
 
 describe('entidades', () => {
@@ -224,5 +395,34 @@ describe('entidades', () => {
     expect(
       DailySettlementSchema.safeParse({ ...settlement, collectedByMethod: { CASH: 450_000 } }).success,
     ).toBe(false);
+  });
+
+  it('el calendario de cuotas solo usa los cuatro estados conocidos', () => {
+    const calendar = fixtures.find(([name]) => name === 'LoanInstallments')?.[2] as { installments: Record<string, unknown>[] };
+    const withUnknownStatus = { ...calendar, installments: [{ ...calendar.installments[0], status: 'LATE' }] };
+    expect(LoanInstallmentsSchema.safeParse(withUnknownStatus).success).toBe(false);
+  });
+
+  it('las estadísticas traen siempre los cuatro tramos de mora, ni más ni menos', () => {
+    const stats = fixtures.find(([name]) => name === 'LenderPeriodStats')?.[2] as { arrearsByAge: unknown[] };
+    expect(LenderPeriodStatsSchema.safeParse({ ...stats, arrearsByAge: stats.arrearsByAge.slice(0, 3) }).success).toBe(false);
+    expect(ArrearsBucketSchema.safeParse({ label: '60+', amount: 0, clientsCount: 0 }).success).toBe(false);
+  });
+
+  it('un contacto de ventas rechaza campos desconocidos pero acepta el señuelo vacío', () => {
+    expect(CreateLeadRequestSchema.safeParse({ name: 'Ana', message: 'Hola', website: '' }).success).toBe(true);
+    expect(CreateLeadRequestSchema.safeParse({ name: 'Ana', message: 'Hola', admin: true }).success).toBe(false);
+  });
+
+  it('el color de marca es un #RRGGBB o nada', () => {
+    const lender = fixtures.find(([name]) => name === 'Lender')?.[2];
+    expect(LenderSchema.safeParse({ ...lender, brandColor: '#0F766E' }).success).toBe(true);
+    expect(LenderSchema.safeParse({ ...lender, brandColor: 'rojo' }).success).toBe(false);
+    expect(LenderSchema.safeParse({ ...lender, brandColor: undefined }).success).toBe(false);
+  });
+
+  it('la fila de cliente no exige updatedAt, que la API no entrega en las listas', () => {
+    const client = fixtures.find(([name]) => name === 'ClientListItem')?.[2];
+    expect(ClientListItemSchema.safeParse(client).success).toBe(true);
   });
 });

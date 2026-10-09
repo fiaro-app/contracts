@@ -22,5 +22,7 @@ export * from './collections';
 export * from './payments';
 export * from './settlements';
 export * from './notifications';
+export * from './dashboard';
+export * from './leads';
 
 export * from './endpoints';

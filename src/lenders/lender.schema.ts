@@ -9,6 +9,10 @@ import {
   type Weekday,
 } from '../common';
 
+/** Color de marca del negocio: `#RRGGBB`, guardado siempre en mayúsculas. */
+export const BrandColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/);
+export type BrandColor = z.infer<typeof BrandColorSchema>;
+
 /** Días sin cobro con los que nace un prestamista. */
 export const DEFAULT_NON_WORKING_WEEKDAYS: readonly Weekday[] = ['SUNDAY'];
 
@@ -21,6 +25,8 @@ export const LenderSchema = z.object({
   tenantId: IdSchema,
   name: BusinessNameSchema,
   logoUrl: z.url().nullable(),
+  /** Color con el que se tiñe el panel; `null` es el de Fiaro. */
+  brandColor: BrandColorSchema.nullable(),
   /** Días de la semana en que no se cobra: no generan cuota esperada ni mora. */
   nonWorkingWeekdays: z.array(WeekdaySchema),
   /** Si es `true`, los festivos nacionales de Colombia tampoco cuentan como días de cobro. */
