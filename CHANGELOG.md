@@ -5,6 +5,21 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 ## [Sin publicar]
 
 ### Agregado
+- Schemas de los endpoints D-103 a D-115 de la API, para que `web` y `mobile` dejen de declararlos por su cuenta:
+  - `loans`: calendario de cuotas (`InstallmentStatusSchema`, `LoanInstallmentSchema`, `LoanInstallmentsSchema`) y fila de la lista con saldo y mora (`LoanListItemSchema`).
+  - `clients`: fila de la lista con saldo y mora (`ClientListItemSchema`).
+  - `collections`: reporte «Cobros del día» (`CollectionVisitReportEntrySchema`, `CollectionVisitReportSchema`) y desempeño de un cobrador (`CollectorPeriodStatsSchema`).
+  - `dashboard` (módulo nuevo): resumen del negocio con período (`LenderDashboardSchema`, `DashboardSettlementSchema`) y estadísticas con tendencias (`LenderPeriodStatsSchema`, `ArrearsBucketSchema`, `TopArrearsEntrySchema`, `LenderStatsCollectorPerformanceSchema`, `LenderPreviousPeriodSchema`, `ARREARS_BUCKET_LABELS`).
+  - `auth`: sesión abierta de la persona (`AccountSessionSchema`).
+  - `leads` (módulo nuevo): contacto de ventas (`CreateLeadRequestSchema`, `LeadReceivedSchema`).
+  - `subscriptions`: plan del negocio con fechas, topes y uso (`SubscriptionDetailsSchema`, `SubscriptionPlanCodeSchema`).
+  - `notifications`: contador de no leídas y resultado de marcar todas (`UnreadCountSchema`, `MarkAllReadResultSchema`).
+  - `lenders`: color de marca (`BrandColorSchema`).
+
+### Cambiado
+- `LenderSchema` suma `brandColor` (`#RRGGBB` o `null`, el color de Fiaro). Quien construya un `Lender` a mano debe incluirlo.
+
+### Agregado
 - Estado de mora de un préstamo, compartido por la web y la app móvil: `overdueStatus({ balance, overdueDays })` devuelve `PAID`, `CURRENT`, `LATE` (ATRASO, 1 a 7 días) o `DELINQUENT` (MORA, más de 7 días). Incluye `LATE_MAX_DAYS` (7) y `OverdueStatusSchema`. La frontera la confirmó producto el 2026-10-09 y coincide con el primer rango del dashboard (D-100).
 
 ### Agregado

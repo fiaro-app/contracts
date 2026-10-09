@@ -33,3 +33,11 @@ export const NotificationSchema = z.object({
   createdAt: TimestampSchema,
 });
 export type Notification = z.infer<typeof NotificationSchema>;
+
+/** Cuántas notificaciones sin leer tiene la persona. */
+export const UnreadCountSchema = z.object({ count: z.int().nonnegative() });
+export type UnreadCount = z.infer<typeof UnreadCountSchema>;
+
+/** Resultado de marcar todas como leídas: cuántas se marcaron (repetirlo da cero). */
+export const MarkAllReadResultSchema = z.object({ marked: z.int().nonnegative() });
+export type MarkAllReadResult = z.infer<typeof MarkAllReadResultSchema>;
