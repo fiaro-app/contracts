@@ -5,6 +5,9 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 ## [Sin publicar]
 
 ### Agregado
+- Estado de mora de un préstamo, compartido por la web y la app móvil: `overdueStatus({ balance, overdueDays })` devuelve `PAID`, `CURRENT`, `LATE` (ATRASO, 1 a 7 días) o `DELINQUENT` (MORA, más de 7 días). Incluye `LATE_MAX_DAYS` (7) y `OverdueStatusSchema`. La frontera la confirmó producto el 2026-10-09 y coincide con el primer rango del dashboard (D-100).
+
+### Agregado
 - Código de error de préstamos en `ErrorCodeSchema`: `LOAN_NOT_CANCELABLE` (422: el préstamo ya no está `ACTIVE`, así que no se puede cancelar).
 
 ## [0.5.0] - 2026-09-30
