@@ -26,3 +26,27 @@ export const SubscriptionSchema = z.object({
   createdAt: TimestampSchema,
 });
 export type Subscription = z.infer<typeof SubscriptionSchema>;
+
+/** Plan con el que nace un negocio. Hoy solo existe la prueba inicial. */
+export const SubscriptionPlanCodeSchema = z.literal('TRIAL');
+export type SubscriptionPlanCode = z.infer<typeof SubscriptionPlanCodeSchema>;
+
+/**
+ * Lo que informa `GET /subscription`: el plan del negocio con su estado, fechas, topes y uso. Solo
+ * informa: la API no bloquea ninguna operación por estos datos.
+ */
+export const SubscriptionDetailsSchema = z.object({
+  planCode: SubscriptionPlanCodeSchema,
+  status: SubscriptionStatusSchema,
+  currentPeriodEndsAt: TimestampSchema,
+  graceEndsAt: TimestampSchema,
+  /** Días enteros para el fin del período; 0 si ya venció. */
+  daysRemaining: z.int().min(0),
+  /** Días enteros de gracia que quedan; 0 fuera de la gracia. */
+  graceDaysRemaining: z.int().min(0),
+  isReadOnly: z.boolean(),
+  limits: z.object({ maxActiveLenders: z.int(), maxCollectors: z.int() }),
+  usage: z.object({ activeLenders: z.int(), activeCollectors: z.int() }),
+  createdAt: TimestampSchema,
+});
+export type SubscriptionDetails = z.infer<typeof SubscriptionDetailsSchema>;
