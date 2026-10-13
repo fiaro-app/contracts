@@ -56,6 +56,8 @@ export const ErrorCodeSchema = z.enum([
   'CLIENT_NATIONAL_ID_TAKEN',
   /** 422: el préstamo ya no está ACTIVE (ya está PAID_OFF o CANCELED), así que no se puede cancelar. */
   'LOAN_NOT_CANCELABLE',
+  /** 400: la verificación del desafío de seguridad (Cloudflare Turnstile) falló o no se completó. */
+  'TURNSTILE_FAILED',
 ]);
 export type ErrorCode = z.infer<typeof ErrorCodeSchema>;
 
