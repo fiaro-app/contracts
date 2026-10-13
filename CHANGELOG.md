@@ -15,6 +15,7 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
   - `subscriptions`: plan del negocio con fechas, topes y uso (`SubscriptionDetailsSchema`, `SubscriptionPlanCodeSchema`).
   - `notifications`: contador de no leídas y resultado de marcar todas (`UnreadCountSchema`, `MarkAllReadResultSchema`).
   - `lenders`: color de marca (`BrandColorSchema`).
+  - `turnstile`: validación de token de Cloudflare Turnstile (`TurnstileTokenSchema`, `TURNSTILE_HEADER`), código de error `TURNSTILE_FAILED` y campo `turnstileToken` en `CreateLeadRequestSchema`.
 
 ### Cambiado
 - `LenderSchema` suma `brandColor` (`#RRGGBB` o `null`, el color de Fiaro). Quien construya un `Lender` a mano debe incluirlo.

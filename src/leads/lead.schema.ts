@@ -11,6 +11,7 @@ export const CreateLeadRequestSchema = z.strictObject({
   email: z.string().min(1).optional(),
   message: z.string().min(1),
   website: z.string().optional(),
+  turnstileToken: z.string().optional(),
 });
 export type CreateLeadRequest = z.infer<typeof CreateLeadRequestSchema>;
 
