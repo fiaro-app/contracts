@@ -224,6 +224,7 @@ const fixtures: Array<[string, z.ZodType, Record<string, unknown>]> = [
     {
       id: id(9),
       clientId: id(8),
+      clientFullName: 'Marta Gómez',
       principalAmount: 500_000,
       installmentCount: 20,
       installmentValue: 30_000,

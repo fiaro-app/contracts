@@ -7,6 +7,8 @@ import { LoanSchema } from './loan.schema';
  * motor que el saldo de cada préstamo, así que las cifras nunca discrepan.
  */
 export const LoanListItemSchema = LoanSchema.extend({
+  /** Nombre completo del cliente, para no tener que buscarlo aparte. */
+  clientFullName: z.string(),
   /** Lo pactado menos lo pagado. Nunca baja de cero. */
   balance: CopTotalSchema,
   /** Lo esperado hasta hoy que sigue sin pagar; cero si está al día o el préstamo cerró. */

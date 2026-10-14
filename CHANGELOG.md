@@ -4,6 +4,11 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 
 ## [Sin publicar]
 
+## [0.10.0] - 2026-10-14
+
+### Cambiado
+- `LoanListItemSchema` suma `clientFullName`: la lista de préstamos trae el nombre del cliente y las apps ya no tienen que cargar todos los clientes para mostrarlo. Quien construya un `LoanListItem` a mano debe incluirlo.
+
 ## [0.9.0] - 2026-10-14
 
 ### Agregado
