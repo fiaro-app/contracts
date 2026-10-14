@@ -15,6 +15,8 @@ export const es = {
     },
     date_range: {
       end_before_start: 'La fecha final debe ser igual o posterior a la inicial.',
+      too_long: 'El rango de fechas es más largo de lo que permite esta consulta.',
+      in_future: 'Las fechas no pueden ser posteriores a hoy.',
     },
     id: {
       invalid: 'Identificador inválido.',
