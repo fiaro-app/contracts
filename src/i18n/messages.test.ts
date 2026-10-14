@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import type { z } from 'zod';
-import { BusinessDateSchema, DateRangeSchema, TimestampSchema } from '../common/dates';
+import { BusinessDateSchema, DateRangeSchema, TimestampSchema, boundedDateRange } from '../common/dates';
 import { IdSchema } from '../common/id';
 import { CopAmountSchema, MAX_COP_AMOUNT, PositiveCopAmountSchema } from '../common/money';
 import { NationalIdSchema } from '../common/national-id';
@@ -19,6 +19,8 @@ const cases: [ContractMessageKey, z.ZodType, unknown][] = [
   ['contracts.app_version.invalid', AppVersionSchema, '1.4'],
   ['contracts.date.invalid', BusinessDateSchema, '23/09/2026'],
   ['contracts.date_range.end_before_start', DateRangeSchema, { from: '2026-09-30', to: '2026-09-01' }],
+  ['contracts.date_range.too_long', boundedDateRange({ maxDays: 1, allowFuture: true }), { from: '2026-09-01', to: '2026-09-02' }],
+  ['contracts.date_range.in_future', boundedDateRange({ maxDays: 1 }), { from: '2999-01-01', to: '2999-01-01' }],
   ['contracts.id.invalid', IdSchema, 'no-es-un-uuid'],
   ['contracts.money.not_integer', CopAmountSchema, 35_000.5],
   ['contracts.money.negative', CopAmountSchema, -1],

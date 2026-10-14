@@ -56,6 +56,12 @@ export const ErrorCodeSchema = z.enum([
   'CLIENT_NATIONAL_ID_TAKEN',
   /** 422: el préstamo ya no está ACTIVE (ya está PAID_OFF o CANCELED), así que no se puede cancelar. */
   'LOAN_NOT_CANCELABLE',
+  /** 409: ya hay un colaborador con esa cédula en este negocio (la misma persona puede trabajar para otro). */
+  'COLLABORATOR_NATIONAL_ID_TAKEN',
+  /** 403: el plan del negocio ya llegó a su límite (por ejemplo, de cobradores activos). */
+  'PLAN_LIMIT_REACHED',
+  /** 409: el cobrador ya tiene historial (asignaciones, visitas o cuadres): no se borra, se da de baja. */
+  'COLLECTOR_HAS_HISTORY',
   /** 400: la verificación del desafío de seguridad (Cloudflare Turnstile) falló o no se completó. */
   'TURNSTILE_FAILED',
 ]);

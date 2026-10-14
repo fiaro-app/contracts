@@ -52,3 +52,40 @@ export type DateRange = z.infer<typeof DateRangeSchema>;
 export function toBusinessDate(instant: Date = new Date()): BusinessDate {
   return new Date(instant.getTime() + BUSINESS_UTC_OFFSET_MS).toISOString().slice(0, 10);
 }
+
+/** Días de calendario entre dos fechas `AAAA-MM-DD`, contando ambos extremos (`2026-09-01` a `2026-09-01` = 1). */
+export function daysInRange(from: BusinessDate, to: BusinessDate): number {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  return Math.round((Date.parse(to) - Date.parse(from)) / DAY_MS) + 1;
+}
+
+/** Límites de un rango de fechas que acepta una consulta. */
+export interface DateRangeLimits {
+  /** Días de calendario que puede abarcar el rango, ambos extremos incluidos. */
+  readonly maxDays: number;
+  /** Si `to` puede ser posterior a hoy en Colombia. Por defecto no: el historial no tiene futuro. */
+  readonly allowFuture?: boolean;
+}
+
+/**
+ * {@link DateRangeSchema} con un largo máximo y, por defecto, sin fechas posteriores a hoy en
+ * Colombia. "Hoy" se calcula al validar, no al definir el schema, así que sirve en un servidor que
+ * corre días seguidos.
+ *
+ * @param limits - El largo máximo y si se aceptan fechas futuras.
+ *
+ * @example
+ * ```ts
+ * const StatsRequest = z.strictObject({ dateRange: boundedDateRange({ maxDays: 366 }).optional() });
+ * ```
+ */
+export function boundedDateRange(limits: DateRangeLimits) {
+  return DateRangeSchema.superRefine((range, ctx) => {
+    if (!limits.allowFuture && range.to > toBusinessDate()) {
+      ctx.addIssue({ code: 'custom', message: messageKey('contracts.date_range.in_future'), path: ['to'] });
+    }
+    if (daysInRange(range.from, range.to) > limits.maxDays) {
+      ctx.addIssue({ code: 'custom', message: messageKey('contracts.date_range.too_long'), path: ['from'] });
+    }
+  });
+}
