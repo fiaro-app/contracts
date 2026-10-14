@@ -4,6 +4,15 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 
 ## [Sin publicar]
 
+## [0.9.0] - 2026-10-14
+
+### Agregado
+- `DEFAULT_PAGE_SIZE` (10) y `boundedDateRange({ maxDays, allowFuture })`: un `DateRangeSchema` con largo máximo que, por defecto, rechaza fechas posteriores a hoy en Colombia (claves `contracts.date_range.too_long` y `contracts.date_range.in_future`). `daysInRange(from, to)` cuenta los días de un rango con ambos extremos.
+- Códigos de error `COLLABORATOR_NATIONAL_ID_TAKEN` (409, cédula repetida dentro del mismo negocio), `PLAN_LIMIT_REACHED` (403, el plan llegó a su límite de cobradores) y `COLLECTOR_HAS_HISTORY` (409, un cobrador con historial no se borra, se da de baja).
+
+### Cambiado
+- `PageQuerySchema`: 10 resultados por página por defecto (antes 20) y `MAX_PAGE_SIZE` baja de 100 a 50. Quien pida más de 50 recibe `400 VALIDATION_FAILED`.
+
 ## [0.7.0] - 2026-10-09
 
 ### Agregado
