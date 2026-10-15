@@ -51,4 +51,9 @@ describe('ApiErrorSchema', () => {
     });
     expect(error.issues?.[0]?.path).toEqual(['phone']);
   });
+
+  it('conserva el errorCode y el requestId cuando vienen, y no los exige', () => {
+    expect(ApiErrorSchema.parse({ ...baseError, code: 'LOAN_NOT_FOUND', errorCode: 'L003A', requestId: 'req-1' })).toMatchObject({ errorCode: 'L003A', requestId: 'req-1' });
+    expect(ApiErrorSchema.safeParse({ ...baseError, code: 'LOAN_NOT_FOUND' }).success).toBe(true);
+  });
 });
