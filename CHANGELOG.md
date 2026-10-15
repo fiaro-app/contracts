@@ -4,6 +4,11 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 
 ## [Sin publicar]
 
+## [0.11.0] - 2026-10-15
+
+### Agregado
+- `ApiErrorSchema` suma `errorCode` (código único del error, p. ej. `L003A`) y `requestId`, ambos opcionales: las apps ya pueden leerlos sin que el schema los descarte.
+
 ## [0.10.0] - 2026-10-14
 
 ### Cambiado
