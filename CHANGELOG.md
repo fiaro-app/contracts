@@ -4,6 +4,12 @@ Todos los cambios relevantes de `@fiaro-app/contracts`. Formato basado en [Keep 
 
 ## [Sin publicar]
 
+## [0.12.0] - 2026-10-16
+
+### Cambiado
+- `SubscriptionPlanCodeSchema` pasa de `'TRIAL'` a `TRIAL | INDIVIDUAL | PRO | TEAM`: quien lea `GET /subscription` de un negocio con plan de pago ya no falla al validar.
+- `SubscriptionDetailsSchema` suma los topes `limits.maxAdmins`, `limits.maxPortfolios` y `limits.maxActiveLoans` (`null` = sin tope) y el uso `usage.activeAdmins` y `usage.activeLoans`. Quien construya un `SubscriptionDetails` a mano debe incluirlos.
+
 ## [0.11.0] - 2026-10-15
 
 ### Agregado
