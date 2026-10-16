@@ -76,7 +76,8 @@ export type ValidationIssue = z.infer<typeof ValidationIssueSchema>;
 
 /**
  * Cuerpo de toda respuesta de error de la API. `code` se valida como texto libre para que una
- * app desactualizada no falle al recibir un código nuevo.
+ * app desactualizada no falle al recibir un código nuevo. `errorCode` y `requestId` son opcionales:
+ * las respuestas de antes de la API 0.x no los traen.
  */
 export const ApiErrorSchema = z.object({
   statusCode: z.int(),
@@ -85,5 +86,9 @@ export const ApiErrorSchema = z.object({
   path: z.string(),
   timestamp: TimestampSchema,
   issues: z.array(ValidationIssueSchema).nullable(),
+  /** Código único del error (`L003A`: área, número y origen). Las apps deciden qué mostrar con él. */
+  errorCode: z.string().optional(),
+  /** Identificador del request, para que soporte encuentre sus logs. */
+  requestId: z.string().optional(),
 });
 export type ApiError = z.infer<typeof ApiErrorSchema>;
