@@ -27,13 +27,17 @@ export const SubscriptionSchema = z.object({
 });
 export type Subscription = z.infer<typeof SubscriptionSchema>;
 
-/** Plan con el que nace un negocio. Hoy solo existe la prueba inicial. */
-export const SubscriptionPlanCodeSchema = z.literal('TRIAL');
+/**
+ * Planes que existen: `TRIAL` (la prueba con la que nace todo negocio) y los tres de pago.
+ * Cada uno trae sus topes en `limits` de {@link SubscriptionDetailsSchema}.
+ */
+export const SubscriptionPlanCodeSchema = z.enum(['TRIAL', 'INDIVIDUAL', 'PRO', 'TEAM']);
 export type SubscriptionPlanCode = z.infer<typeof SubscriptionPlanCodeSchema>;
 
 /**
- * Lo que informa `GET /subscription`: el plan del negocio con su estado, fechas, topes y uso. Solo
- * informa: la API no bloquea ninguna operación por estos datos.
+ * Lo que informa `GET /subscription`: el plan del negocio con su estado, fechas, topes y uso. Los
+ * topes los aplica la API al crear (`PLAN_LIMIT_REACHED`), y pasada la gracia las escrituras
+ * responden `SUBSCRIPTION_READ_ONLY`, salvo registrar visitas y pagos y los cuadres.
  */
 export const SubscriptionDetailsSchema = z.object({
   planCode: SubscriptionPlanCodeSchema,
@@ -45,8 +49,26 @@ export const SubscriptionDetailsSchema = z.object({
   /** Días enteros de gracia que quedan; 0 fuera de la gracia. */
   graceDaysRemaining: z.int().min(0),
   isReadOnly: z.boolean(),
-  limits: z.object({ maxActiveLenders: z.int(), maxCollectors: z.int() }),
-  usage: z.object({ activeLenders: z.int(), activeCollectors: z.int() }),
+  limits: z.object({
+    maxActiveLenders: z.int(),
+    /** Cobradores activos por prestamista, sin contar a la dueña. */
+    maxCollectors: z.int(),
+    /** Administradores activos por prestamista; la dueña cuenta como uno. */
+    maxAdmins: z.int(),
+    /** Carteras por prestamista, la «General» incluida. */
+    maxPortfolios: z.int(),
+    /** Préstamos activos por prestamista; `null` si el plan no los limita. */
+    maxActiveLoans: z.int().nullable(),
+  }),
+  usage: z.object({
+    activeLenders: z.int(),
+    /** Cobradores activos que ocupan cupo: la dueña no cuenta. */
+    activeCollectors: z.int(),
+    /** Administradores activos (`LENDER` u `OWNER`): la dueña cuenta. */
+    activeAdmins: z.int(),
+    /** Préstamos activos del prestamista de la sesión. */
+    activeLoans: z.int(),
+  }),
   createdAt: TimestampSchema,
 });
 export type SubscriptionDetails = z.infer<typeof SubscriptionDetailsSchema>;
